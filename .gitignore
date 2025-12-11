@@ -1,0 +1,36 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Output de testes / reports
+reports/
+report/
+coverage/
+logs/
+*.log
+
+# Mochawesome (HTML report)
+mochawesome-report/
+mochawesome.json
+mochawesome.html
+
+# Pactum state files (se usar)
+.pactum/*
+.pactum.json
+
+# VSCode
+.vscode/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.tmp
+*.swp
+
+# Ambiente
+.env
+.env.local
+.env.test

@@ -1,0 +1,19 @@
+{
+  "name": "pactum",
+  "version": "1.0.0",
+  "main": "pactum.setup.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
+    "mocha": "^11.7.5",
+    "pactum": "^3.8.0"
+  },
+  "scripts": {
+    "test": "mocha test/test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
