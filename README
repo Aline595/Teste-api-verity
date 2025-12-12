@@ -33,22 +33,17 @@ https://nodejs.org/
 
 ### 2️⃣ Instale 
 ```bash
-npm install -g newman newman-reporter-html
+npm install 
 ```
 
 ### 3️⃣ Execute os testes
 ```bash
-newman run Serverest-API-Tests.postman_collection.json   -e serverest-env.postman_environment.json   -r html --reporter-html-export report.html
+npm test
 ```
 
 ## 🔄 Pipeline CI – GitHub Actions
 
-Executa automaticamente os testes a cada push.  
-Arquivo utilizado:
 
-```
-.github/workflows/api-tests.yml
-```
 
 ## ✔ Casos de Teste Implementados
 

@@ -8,10 +8,11 @@
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
     "mocha": "^11.7.5",
+    "mochawesome": "^7.1.4",
     "pactum": "^3.8.0"
   },
   "scripts": {
-    "test": "mocha test/test.js"
+    "test": "mocha test/test.js --reporter mochawesome"
   },
   "author": "",
   "license": "ISC",
