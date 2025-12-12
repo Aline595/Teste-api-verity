@@ -1,6 +1,6 @@
 # 🚀 Testes Automatizados – API Serverest
 
-Este projeto contém um conjunto de **testes automatizados de API** utilizando **PACTUM**
+Este projeto contém um conjunto de **testes automatizados de API** utilizando **PACTUM** de acordo com o desafio solicitado
 
 ## 📌 Objetivo do Projeto
 
@@ -43,7 +43,7 @@ npm test
 
 ## 🔄 Pipeline CI – GitHub Actions
 
-
+Acessar a aba do github actions e solicitar reexecução, após a execução é gerado um relatorio como artefato para dowload
 
 ## ✔ Casos de Teste Implementados
 
