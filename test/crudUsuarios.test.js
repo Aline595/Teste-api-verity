@@ -1,60 +1,7 @@
 const pactum = require('pactum');
 const { spec } = pactum;
 
-describe ('API Teste', () =>{
-
-    it('Login com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        // Criar user para logar
-        let userDel = await spec()
-        .post('https://serverest.dev/usuarios')
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        await spec()
-        .post('https://serverest.dev/login')
-        .withBody({
-            "email": email,
-            "password": "teste"
-        })
-        .expectStatus(200)
-        .expectJsonLike({
-            "message": "Login realizado com sucesso"
-        })
-        
-    });
-    
-    it('Login com email incorreto', async () =>{
-        await spec()
-        .post('https://serverest.dev/login')
-        .withBody({
-            "email": "Mortimer_Streich38",
-            "password": "Senha@1063"
-        })
-        .expectStatus(400)
-        .expectJsonLike({
-            "email": "email deve ser um email válido"
-        })
-        
-    });
-    
-    it('Login com senha incorreta', async () =>{
-        await spec()
-        .post('https://serverest.dev/login')
-        .withBody({
-            "email": "Mortimer_Streich38@hotmail.com",
-            "password": "Senha@"
-        })
-        .expectStatus(401)
-        .expectJsonLike({
-            "message": "Email e/ou senha inválidos"
-        })
-        
-    });
+describe ('CRUD Usuarios', () =>{
     
     it('Criar usuario com sucesso', async () =>{
         const faker = await import('@faker-js/faker');
@@ -188,37 +135,6 @@ describe ('API Teste', () =>{
             "message": "Registro alterado com sucesso"
         }) 
     });
-
-    /*
-    ////// API quebrada - permiti usar id invalido
-    it('Atualizar usuario com id invalido', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        const emailDois = faker.faker.internet.email();
-        // Criar user para editar
-        let userDel = await spec()
-        .post('https://serverest.dev/usuarios')
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        userId = userDel.json._id;
-        //Edita user
-        await spec()
-        .put('https://serverest.dev/usuarios/111111111111111')
-        .expectStatus(200)
-        .withBody({
-            "nome": "Ron Pouros",
-            "email": emailDois,
-            "password": "teste",
-            "administrador": "true"
-        })
-        .expectJsonLike({
-            "message": "Id invalido"
-        }) 
-    });*/
 
     it('Atualizar usuario com email ja em uso', async () =>{
         const faker = await import('@faker-js/faker');

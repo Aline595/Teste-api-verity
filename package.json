@@ -12,7 +12,7 @@
     "pactum": "^3.8.0"
   },
   "scripts": {
-    "test": "mocha test/test.js --reporter mochawesome"
+    "test": "mocha test/**.js --reporter mochawesome"
   },
   "author": "",
   "license": "ISC",
