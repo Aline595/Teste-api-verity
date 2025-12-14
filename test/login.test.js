@@ -1,11 +1,11 @@
 const pactum = require('pactum');
-const faker = require('@faker-js/faker');
 const { spec } = pactum;
 const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js");
 
 describe ('Testes de login', () =>{
 
     it('Login com sucesso', async () =>{
+        const faker = await import('@faker-js/faker');
         const email = faker.faker.internet.email();
 
         // Criar user para logar
