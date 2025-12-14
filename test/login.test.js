@@ -33,11 +33,13 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com email incorreto', async () =>{
+        const faker = await import('@faker-js/faker');
+        const password = faker.faker.internet.password({ length: 8 });
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": "Mortimer_Streich38",
-            "password": "Senha@1063"
+            "email": "Email_invalido",
+            "password": password
         })
         .expectStatus(400)
         .expectJsonLike({
@@ -48,17 +50,37 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com senha incorreta', async () =>{
+        const faker = await import('@faker-js/faker');
+        const email = faker.faker.internet.email();
+        
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": "Mortimer_Streich38@hotmail.com",
-            "password": "Senha@"
+            "email": email,
+            "password": "inv"
         })
         .expectStatus(401)
         .expectJsonLike({
             "message": "Email e/ou senha inválidos"
         })
         .expectJsonSchema(postLoginEventSchema.badRequest)
+    });
+
+    it('Login com senha em branco', async () =>{
+        const faker = await import('@faker-js/faker');
+        const email = faker.faker.internet.email();
+        
+        await spec()
+        .post('https://serverest.dev/login')
+        .withBody({
+            "email": email,
+            "password": ""
+        })
+        .expectStatus(400)
+        .expectJsonLike({
+            "password": "password não pode ficar em branco"
+        })
+        .expectJsonSchema(postLoginEventSchema.badRequestpassword)
     });
 
 });

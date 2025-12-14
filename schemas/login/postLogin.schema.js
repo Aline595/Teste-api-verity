@@ -42,6 +42,20 @@ const postLoginEventSchema = {
     "email"
   ]
 }
+,
+  badRequestpassword: {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "password"
+  ]
+}
 
 }
 
