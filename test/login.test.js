@@ -7,15 +7,14 @@ describe ('Testes de login', () =>{
 
     it('Login com sucesso', async () =>{
         const email = faker.faker.internet.email();
-        const password = faker.faker.internet.password();
 
         // Criar user para logar
         await spec()
         .post('https://serverest.dev/usuarios')
         .withBody({
-            "nome": "Nome teste",
+            "nome": "Fulano da Silva",
             "email": email,
-            "password": password,
+            "password": "teste",
             "administrador": "true"
         })
 
@@ -23,7 +22,7 @@ describe ('Testes de login', () =>{
         .post('https://serverest.dev/login')
         .withBody({
             "email": email,
-            "password": password
+            "password": "teste"
         })
         .expectStatus(200)
         .expectJsonLike({
@@ -34,12 +33,11 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com email incorreto', async () =>{
-        const password = faker.faker.internet.password();
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": "Email_invalido",
-            "password": password
+            "email": "Mortimer_Streich38",
+            "password": "Senha@1063"
         })
         .expectStatus(400)
         .expectJsonLike({
@@ -50,12 +48,11 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com senha incorreta', async () =>{
-        const email = faker.faker.internet.email();
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": email,
-            "password": "SenhaInvalida"
+            "email": "Mortimer_Streich38@hotmail.com",
+            "password": "Senha@"
         })
         .expectStatus(401)
         .expectJsonLike({
