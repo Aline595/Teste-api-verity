@@ -28,7 +28,21 @@ const postLoginEventSchema = {
     "required": [
         "message"
     ]
-  }
+  },
+  badRequest400: {
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "email"
+  ]
+}
+
 }
 
 module.exports = {

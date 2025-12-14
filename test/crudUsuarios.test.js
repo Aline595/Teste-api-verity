@@ -1,5 +1,10 @@
 const pactum = require('pactum');
 const { spec } = pactum;
+const { deleteUsuariosEventSchema } = require("../schemas/crudUsuarios/deleteUsuarios.schema.js");
+const { getUsuariosEventSchema } = require("../schemas/crudUsuarios/getUsuarios.schema.js");
+const { getUsuariosIdEventSchema } = require("../schemas/crudUsuarios/getUsuariosId.schema.js");
+const { postUsuariosEventSchema } = require("../schemas/crudUsuarios/postUsuarios.schema.js");
+const { putUsuariosEventSchema } = require("../schemas/crudUsuarios/putUsuarios.schema.js");
 
 describe ('CRUD Usuarios', () =>{
     
@@ -19,6 +24,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Cadastro realizado com sucesso"
         })  
+        .expectJsonSchema(postUsuariosEventSchema.ok)
     });
 
     it('Validar criacao de usuario com email duplicado', async () =>{
@@ -46,12 +52,14 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Este email já está sendo usado"
         })  
+        .expectJsonSchema(postUsuariosEventSchema.badRequest)
     });
 
     it('Listar usuarios com sucesso', async () =>{
         await spec()
         .get('https://serverest.dev/usuarios')
         .expectStatus(200)
+        .expectJsonSchema(getUsuariosEventSchema.ok)
     })
 
     it('Buscar usuario por id com sucesso', async () =>{
@@ -78,6 +86,7 @@ describe ('CRUD Usuarios', () =>{
             password: 'teste',
             administrador: 'true'
         }) 
+        .expectJsonSchema(getUsuariosIdEventSchema.ok)
     });
 
     it('Buscar usuario com id menor de 16 caracteres', async () =>{      
@@ -87,15 +96,17 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "id": "id deve ter exatamente 16 caracteres alfanuméricos"
         }) 
+        .expectJsonSchema(getUsuariosIdEventSchema.badRequest400)
     });
 
-    it('Buscar usuario com id meior de 16 caracteres', async () =>{      
+    it('Buscar usuario com id menor de 16 caracteres', async () =>{      
         await spec()
         .get('https://serverest.dev/usuarios/14c15d646f4r651efs3fcs')
         .expectStatus(400)
         .expectJsonLike({
             "id": "id deve ter exatamente 16 caracteres alfanuméricos"
         }) 
+        .expectJsonSchema(getUsuariosIdEventSchema.badRequest400)
     });
 
     it('Buscar usuario com id nao encontrado', async () =>{      
@@ -105,6 +116,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Usuário não encontrado"
         }) 
+        .expectJsonSchema(getUsuariosIdEventSchema.badRequest)
     });
 
     it('Atualizar usuario com sucesso', async () =>{
@@ -134,6 +146,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Registro alterado com sucesso"
         }) 
+        .expectJsonSchema(putUsuariosEventSchema.ok)
     });
 
     it('Atualizar usuario com email ja em uso', async () =>{
@@ -173,6 +186,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Este email já está sendo usado"
         }) 
+        .expectJsonSchema(putUsuariosEventSchema.badRequest200)
     });
 
     it('Deletar usuario com sucesso', async () =>{
@@ -196,6 +210,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Registro excluído com sucesso"
         })
+        .expectJsonSchema(deleteUsuariosEventSchema.ok)
     });
 
     it('Deletar usuario com carrinho', async () =>{
@@ -205,6 +220,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Nenhum registro excluído"
         })
+        .expectJsonSchema(deleteUsuariosEventSchema.badRequest200)
     });
 
     it('Deletar usuario com id inexistente', async () =>{
@@ -214,6 +230,7 @@ describe ('CRUD Usuarios', () =>{
         .expectJsonLike({
             "message": "Nenhum registro excluído"
         })
+        .expectJsonSchema(deleteUsuariosEventSchema.badRequest200)
     });
 
 });

@@ -1,5 +1,6 @@
 const pactum = require('pactum');
 const { spec } = pactum;
+const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js");
 
 describe ('Testes de login', () =>{
 
@@ -15,6 +16,7 @@ describe ('Testes de login', () =>{
             "password": "teste",
             "administrador": "true"
         })
+
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
@@ -25,6 +27,7 @@ describe ('Testes de login', () =>{
         .expectJsonLike({
             "message": "Login realizado com sucesso"
         })
+        .expectJsonSchema(postLoginEventSchema.ok)
         
     });
     
@@ -39,6 +42,7 @@ describe ('Testes de login', () =>{
         .expectJsonLike({
             "email": "email deve ser um email válido"
         })
+        .expectJsonSchema(postLoginEventSchema.badRequest400)
         
     });
     
@@ -53,7 +57,7 @@ describe ('Testes de login', () =>{
         .expectJsonLike({
             "message": "Email e/ou senha inválidos"
         })
-        
+        .expectJsonSchema(postLoginEventSchema.badRequest)
     });
 
 });

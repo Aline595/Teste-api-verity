@@ -40,6 +40,19 @@ const getUsuariosIdEventSchema = {
   "required": [
     "message"
   ]
+  },
+  badRequest400:{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id"
+  ]
   }
 }
 
