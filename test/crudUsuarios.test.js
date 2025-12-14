@@ -5,6 +5,7 @@ const { getUsuariosEventSchema } = require("../schemas/crudUsuarios/getUsuarios.
 const { getUsuariosIdEventSchema } = require("../schemas/crudUsuarios/getUsuariosId.schema.js");
 const { postUsuariosEventSchema } = require("../schemas/crudUsuarios/postUsuarios.schema.js");
 const { putUsuariosEventSchema } = require("../schemas/crudUsuarios/putUsuarios.schema.js");
+const { urls } = require("../data/url.data.js")
 
 describe ('CRUD Usuarios', () =>{
     
@@ -13,7 +14,7 @@ describe ('CRUD Usuarios', () =>{
         const email = faker.faker.internet.email();
 
         await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
@@ -31,8 +32,8 @@ describe ('CRUD Usuarios', () =>{
         const faker = await import('@faker-js/faker');
         const email = faker.faker.internet.email();
         // criando user base
-        let user = await spec()
-        .post('https://serverest.dev/usuarios')
+        await spec()
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
@@ -57,7 +58,7 @@ describe ('CRUD Usuarios', () =>{
 
     it('Listar usuarios com sucesso', async () =>{
         await spec()
-        .get('https://serverest.dev/usuarios')
+        .get(urls.urlApi.urlUsuarios)
         .expectStatus(200)
         .expectJsonSchema(getUsuariosEventSchema.ok)
     })
@@ -67,7 +68,7 @@ describe ('CRUD Usuarios', () =>{
         const email = faker.faker.internet.email();
         // Criar user para buscar
         let userDel = await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
@@ -124,7 +125,7 @@ describe ('CRUD Usuarios', () =>{
         const email = faker.faker.internet.email();
         // Criar user para editar
         let userDel = await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
@@ -155,7 +156,7 @@ describe ('CRUD Usuarios', () =>{
         const emailDois = faker.faker.internet.email();
         // Criar user para email em uso
         let userMail = await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
@@ -164,7 +165,7 @@ describe ('CRUD Usuarios', () =>{
         })
         // Criar user para editar
         let userEdit = await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": emailDois,
@@ -194,7 +195,7 @@ describe ('CRUD Usuarios', () =>{
         const email = faker.faker.internet.email();
         // Criar user para deletar
         let userDel = await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,

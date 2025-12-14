@@ -1,6 +1,7 @@
 const pactum = require('pactum');
 const { spec } = pactum;
 const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js");
+const { urls } = require("../data/url.data.js")
 
 describe ('Testes de login', () =>{
 
@@ -10,7 +11,7 @@ describe ('Testes de login', () =>{
         const password = faker.faker.internet.password({ length: 8 });
         // Criar user para logar
         await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Nome teste",
             "email": email,
@@ -19,7 +20,7 @@ describe ('Testes de login', () =>{
         })
 
         await spec()
-        .post('https://serverest.dev/login')
+        .post(urls.urlApi.urlLogin)
         .withBody({
             "email": email,
             "password": password
@@ -36,7 +37,7 @@ describe ('Testes de login', () =>{
         const faker = await import('@faker-js/faker');
         const password = faker.faker.internet.password({ length: 8 });
         await spec()
-        .post('https://serverest.dev/login')
+        .post(urls.urlApi.urlLogin)
         .withBody({
             "email": "Email_invalido",
             "password": password
@@ -54,7 +55,7 @@ describe ('Testes de login', () =>{
         const email = faker.faker.internet.email();
         
         await spec()
-        .post('https://serverest.dev/login')
+        .post(urls.urlApi.urlLogin)
         .withBody({
             "email": email,
             "password": "inv"
@@ -71,7 +72,7 @@ describe ('Testes de login', () =>{
         const email = faker.faker.internet.email();
         
         await spec()
-        .post('https://serverest.dev/login')
+        .post(urls.urlApi.urlLogin)
         .withBody({
             "email": email,
             "password": ""
