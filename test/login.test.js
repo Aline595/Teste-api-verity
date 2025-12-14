@@ -7,14 +7,14 @@ describe ('Testes de login', () =>{
     it('Login com sucesso', async () =>{
         const faker = await import('@faker-js/faker');
         const email = faker.faker.internet.email();
-
+        const password = faker.faker.internet.password({ length: 8 });
         // Criar user para logar
         await spec()
         .post('https://serverest.dev/usuarios')
         .withBody({
             "nome": "Fulano da Silva",
             "email": email,
-            "password": "teste",
+            "password": password,
             "administrador": "true"
         })
 
