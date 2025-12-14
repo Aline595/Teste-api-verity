@@ -12,7 +12,7 @@ describe ('Testes de login', () =>{
         await spec()
         .post('https://serverest.dev/usuarios')
         .withBody({
-            "nome": "Fulano da Silva",
+            "nome": "Nome teste",
             "email": email,
             "password": password,
             "administrador": "true"
@@ -22,7 +22,7 @@ describe ('Testes de login', () =>{
         .post('https://serverest.dev/login')
         .withBody({
             "email": email,
-            "password": "teste"
+            "password": password
         })
         .expectStatus(200)
         .expectJsonLike({
