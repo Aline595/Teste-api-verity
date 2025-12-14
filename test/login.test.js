@@ -1,19 +1,21 @@
 const pactum = require('pactum');
+const faker = require('@faker-js/faker');
 const { spec } = pactum;
 const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js");
 
 describe ('Testes de login', () =>{
 
     it('Login com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
         const email = faker.faker.internet.email();
+        const password = faker.faker.internet.password();
+
         // Criar user para logar
-        let userDel = await spec()
+        await spec()
         .post('https://serverest.dev/usuarios')
         .withBody({
-            "nome": "Fulano da Silva",
+            "nome": "Nome teste",
             "email": email,
-            "password": "teste",
+            "password": password,
             "administrador": "true"
         })
 
@@ -21,7 +23,7 @@ describe ('Testes de login', () =>{
         .post('https://serverest.dev/login')
         .withBody({
             "email": email,
-            "password": "teste"
+            "password": password
         })
         .expectStatus(200)
         .expectJsonLike({
@@ -32,11 +34,12 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com email incorreto', async () =>{
+        const password = faker.faker.internet.password();
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": "Mortimer_Streich38",
-            "password": "Senha@1063"
+            "email": "Email_invalido",
+            "password": password
         })
         .expectStatus(400)
         .expectJsonLike({
@@ -47,11 +50,12 @@ describe ('Testes de login', () =>{
     });
     
     it('Login com senha incorreta', async () =>{
+        const email = faker.faker.internet.email();
         await spec()
         .post('https://serverest.dev/login')
         .withBody({
-            "email": "Mortimer_Streich38@hotmail.com",
-            "password": "Senha@"
+            "email": email,
+            "password": "SenhaInvalida"
         })
         .expectStatus(401)
         .expectJsonLike({
