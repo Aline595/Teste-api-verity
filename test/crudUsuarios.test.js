@@ -1,66 +1,38 @@
 const pactum = require('pactum');
+const { expect } = require("pactum")
 const { spec } = pactum;
 const { deleteUsuariosEventSchema } = require("../schemas/crudUsuarios/deleteUsuarios.schema.js");
 const { getUsuariosEventSchema } = require("../schemas/crudUsuarios/getUsuarios.schema.js");
 const { getUsuariosIdEventSchema } = require("../schemas/crudUsuarios/getUsuariosId.schema.js");
 const { postUsuariosEventSchema } = require("../schemas/crudUsuarios/postUsuarios.schema.js");
 const { putUsuariosEventSchema } = require("../schemas/crudUsuarios/putUsuarios.schema.js");
-const { urls } = require("../data/url.data.js")
+const { urls } = require("../data/url.data.js");
+const UsuariosRequest = require('../requests/usuarios.resquest.js');
 
 describe ('CRUD Usuarios', () =>{
     
     it('Criar usuario com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-
-        await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        .expectStatus(201)
-        .expectJsonLike({
+        responsePost = await UsuariosRequest.postCriarUsuarioComSucesso()
+        expect(responsePost).to.have.status(201)
+        expect(responsePost).to.have.jsonSchema(postUsuariosEventSchema.ok)
+        expect(responsePost).to.have.jsonLike({
             "message": "Cadastro realizado com sucesso"
-        })  
-        .expectJsonSchema(postUsuariosEventSchema.ok)
+        })
     });
 
     it('Validar criacao de usuario com email duplicado', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        // criando user base
-        await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        //user com email duplicado
-        await spec()
-        .post('https://serverest.dev/usuarios')
-        .withBody({
-            "nome": "Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        .expectStatus(400)
-        .expectJsonLike({
+       responsePost = await UsuariosRequest.postCriarUsuarioComEmailDuplicado()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(postUsuariosEventSchema.badRequest)
+        expect(responsePost).to.have.jsonLike({
             "message": "Este email já está sendo usado"
-        })  
-        .expectJsonSchema(postUsuariosEventSchema.badRequest)
+        })
     });
 
     it('Listar usuarios com sucesso', async () =>{
-        await spec()
-        .get(urls.urlApi.urlUsuarios)
-        .expectStatus(200)
-        .expectJsonSchema(getUsuariosEventSchema.ok)
+        responsePost = await UsuariosRequest.getUsuarioSucesso()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(getUsuariosEventSchema.ok)
     })
 
     it('Buscar usuario por id com sucesso', async () =>{
@@ -91,147 +63,75 @@ describe ('CRUD Usuarios', () =>{
     });
 
     it('Buscar usuario com id menor de 16 caracteres', async () =>{      
-        await spec()
-        .get('https://serverest.dev/usuarios/1')
-        .expectStatus(400)
-        .expectJsonLike({
+        responsePost = await UsuariosRequest.getUsuarioIdMenor()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(getUsuariosIdEventSchema.badRequest400)
+        expect(responsePost).to.have.jsonLike({
             "id": "id deve ter exatamente 16 caracteres alfanuméricos"
-        }) 
-        .expectJsonSchema(getUsuariosIdEventSchema.badRequest400)
+        })
     });
 
-    it('Buscar usuario com id menor de 16 caracteres', async () =>{      
-        await spec()
-        .get('https://serverest.dev/usuarios/14c15d646f4r651efs3fcs')
-        .expectStatus(400)
-        .expectJsonLike({
+    it('Buscar usuario com id maior de 16 caracteres', async () =>{  
+        responsePost = await UsuariosRequest.getUsuarioIdMaior()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(getUsuariosIdEventSchema.badRequest400)
+        expect(responsePost).to.have.jsonLike({
             "id": "id deve ter exatamente 16 caracteres alfanuméricos"
-        }) 
-        .expectJsonSchema(getUsuariosIdEventSchema.badRequest400)
+        })
     });
 
-    it('Buscar usuario com id nao encontrado', async () =>{      
-        await spec()
-        .get('https://serverest.dev/usuarios/1vPnkrR63tiS1111')
-        .expectStatus(400)
-        .expectJsonLike({
+    it('Buscar usuario com id nao encontrado', async () =>{   
+        responsePost = await UsuariosRequest.getUsuarioIdinexistente()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(getUsuariosIdEventSchema.badRequest)
+        expect(responsePost).to.have.jsonLike({
             "message": "Usuário não encontrado"
-        }) 
-        .expectJsonSchema(getUsuariosIdEventSchema.badRequest)
+        })
     });
 
     it('Atualizar usuario com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        // Criar user para editar
-        let userDel = await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        userId = userDel.json._id;
-        //Edita user
-        await spec()
-        .put('https://serverest.dev/usuarios/{id}')
-        .withPathParams('id', userId)
-        .expectStatus(200)
-        .withBody({
-            "nome": "Ron Pouros",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        .expectJsonLike({
+        responsePost = await UsuariosRequest.putAtualizarUsuarioSucesso()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(putUsuariosEventSchema.ok)
+        expect(responsePost).to.have.jsonLike({
             "message": "Registro alterado com sucesso"
-        }) 
-        .expectJsonSchema(putUsuariosEventSchema.ok)
+        })
     });
 
     it('Atualizar usuario com email ja em uso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        const emailDois = faker.faker.internet.email();
-        // Criar user para email em uso
-        let userMail = await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        // Criar user para editar
-        let userEdit = await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": emailDois,
-            "password": "teste",
-            "administrador": "true"
-        })
-        userId = userEdit.json._id;
-        //Edita user
-        await spec()
-        .put('https://serverest.dev/usuarios/{id}')
-        .withPathParams('id', userId)
-        .expectStatus(400)
-        .withBody({
-            "nome": "Ron Pouros",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
-        })
-        .expectJsonLike({
+        responsePost = await UsuariosRequest.putAtualizarUsuarioEmailEmUso()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(putUsuariosEventSchema.badRequest200)
+        expect(responsePost).to.have.jsonLike({
             "message": "Este email já está sendo usado"
-        }) 
-        .expectJsonSchema(putUsuariosEventSchema.badRequest200)
+        })
     });
 
     it('Deletar usuario com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        // Criar user para deletar
-        let userDel = await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Fulano da Silva",
-            "email": email,
-            "password": "teste",
-            "administrador": "true"
+        responsePost = await UsuariosRequest.delUsuarioSucesso()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(deleteUsuariosEventSchema.ok)
+        expect(responsePost).to.have.jsonLike({
+           "message": "Registro excluído com sucesso"
         })
-        userId = userDel.json._id;
-        // Deleta user
-        await spec()
-        .delete('https://serverest.dev/usuarios/{id}')
-        .withPathParams('id', userId)
-        .expectStatus(200)
-        .expectJsonLike({
-            "message": "Registro excluído com sucesso"
-        })
-        .expectJsonSchema(deleteUsuariosEventSchema.ok)
     });
 
     it('Deletar usuario com carrinho', async () =>{
-        await spec()
-        .delete('https://serverest.dev/usuarios/qbMqntef4iTOwWfg')
-        .expectStatus(200)
-        .expectJsonLike({
-            "message": "Nenhum registro excluído"
+        responsePost = await UsuariosRequest.delUsuarioComCarrinho()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(deleteUsuariosEventSchema.badRequest200)
+        expect(responsePost).to.have.jsonLike({
+           "message": "Nenhum registro excluído"
         })
-        .expectJsonSchema(deleteUsuariosEventSchema.badRequest200)
     });
 
     it('Deletar usuario com id inexistente', async () =>{
-        await spec()
-        .delete('https://serverest.dev/usuarios/qbMqntef4iTO1111')
-        .expectStatus(200)
-        .expectJsonLike({
-            "message": "Nenhum registro excluído"
+        responsePost = await UsuariosRequest.delUsuarioinexistente()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(deleteUsuariosEventSchema.badRequest200)
+        expect(responsePost).to.have.jsonLike({
+           "message": "Nenhum registro excluído"
         })
-        .expectJsonSchema(deleteUsuariosEventSchema.badRequest200)
     });
 
 });

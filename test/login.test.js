@@ -1,87 +1,44 @@
-const pactum = require('pactum');
-const { spec } = pactum;
-const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js");
-const { urls } = require("../data/url.data.js")
+const { expect } = require("pactum")
+const { postLoginEventSchema } = require("../schemas/login/postLogin.schema.js")
+const loginRequest = require('../requests/login.request.js')
 
 describe ('Testes de login', () =>{
 
     it('Login com sucesso', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        const password = faker.faker.internet.password({ length: 8 });
-        // Criar user para logar
-        await spec()
-        .post(urls.urlApi.urlUsuarios)
-        .withBody({
-            "nome": "Nome teste",
-            "email": email,
-            "password": password,
-            "administrador": "true"
-        })
 
-        await spec()
-        .post(urls.urlApi.urlLogin)
-        .withBody({
-            "email": email,
-            "password": password
-        })
-        .expectStatus(200)
-        .expectJsonLike({
+        responsePost = await loginRequest.postLoginSucesso()
+        expect(responsePost).to.have.status(200)
+        expect(responsePost).to.have.jsonSchema(postLoginEventSchema.ok)
+        expect(responsePost).to.have.jsonLike({
             "message": "Login realizado com sucesso"
         })
-        .expectJsonSchema(postLoginEventSchema.ok)
-        
     });
     
     it('Login com email incorreto', async () =>{
-        const faker = await import('@faker-js/faker');
-        const password = faker.faker.internet.password({ length: 8 });
-        await spec()
-        .post(urls.urlApi.urlLogin)
-        .withBody({
-            "email": "Email_invalido",
-            "password": password
-        })
-        .expectStatus(400)
-        .expectJsonLike({
+        responsePost = await loginRequest.postLoginEmailInvalido()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(postLoginEventSchema.badRequest400)
+        expect(responsePost).to.have.jsonLike({
             "email": "email deve ser um email válido"
         })
-        .expectJsonSchema(postLoginEventSchema.badRequest400)
-        
     });
     
     it('Login com senha incorreta', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        
-        await spec()
-        .post(urls.urlApi.urlLogin)
-        .withBody({
-            "email": email,
-            "password": "inv"
-        })
-        .expectStatus(401)
-        .expectJsonLike({
+        responsePost = await loginRequest.postLoginSenhaIncorreta()
+        expect(responsePost).to.have.status(401)
+        expect(responsePost).to.have.jsonSchema(postLoginEventSchema.badRequest)
+        expect(responsePost).to.have.jsonLike({
             "message": "Email e/ou senha inválidos"
         })
-        .expectJsonSchema(postLoginEventSchema.badRequest)
     });
 
     it('Login com senha em branco', async () =>{
-        const faker = await import('@faker-js/faker');
-        const email = faker.faker.internet.email();
-        
-        await spec()
-        .post(urls.urlApi.urlLogin)
-        .withBody({
-            "email": email,
-            "password": ""
-        })
-        .expectStatus(400)
-        .expectJsonLike({
+        responsePost = await loginRequest.postLoginSenhaBranco()
+        expect(responsePost).to.have.status(400)
+        expect(responsePost).to.have.jsonSchema(postLoginEventSchema.badRequestpassword)
+        expect(responsePost).to.have.jsonLike({
             "password": "password não pode ficar em branco"
         })
-        .expectJsonSchema(postLoginEventSchema.badRequestpassword)
     });
 
 });
