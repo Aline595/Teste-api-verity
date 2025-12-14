@@ -30,7 +30,7 @@ class UsuariosRequest {
         })
         //user com email duplicado
         return await spec()
-        .post('https://serverest.dev/usuarios')
+        .post(urls.urlApi.urlUsuarios)
         .withBody({
             "nome": "Silva",
             "email": email,
